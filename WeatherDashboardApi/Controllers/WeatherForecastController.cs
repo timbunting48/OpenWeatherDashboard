@@ -5,7 +5,7 @@ using WeatherDashboardApi.Models;
 namespace WeatherDashboardApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class WeatherForecastController(IOpenWeatherApiHelper openWeatherApiHelper, ILogger<WeatherForecastController> logger) : ControllerBase
     {
         private readonly IOpenWeatherApiHelper _openWeatherApiHelper = openWeatherApiHelper;
