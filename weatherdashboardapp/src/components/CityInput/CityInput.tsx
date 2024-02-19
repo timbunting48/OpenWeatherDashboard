@@ -3,6 +3,7 @@ import { WeatherApiService } from "../../services/WeatherApiService";
 import { CityLocation } from "../../models/CityLocation.class";
 import { CurrentWeather } from "../../models/CurrentWeather.class";
 import { WeatherPicture } from "../WeatherPicture/WeatherPicture";
+import { Container, Grid } from "@mantine/core";
 
 export interface ICityInputProps{
     service : WeatherApiService;
@@ -11,6 +12,9 @@ export interface ICityInputProps{
 export function CityInput(props: ICityInputProps) {
     const [weatherIcon, setWeatherIcon] = useState('');
     const [description, setDescription] = useState('');
+    const [humidity, setHumidity] = useState(0);
+    const [windSpeed, setWindSpeed] = useState(0);
+    const [temperature, setTemperature] = useState(0);
     
     useEffect(() => {
        
@@ -27,6 +31,9 @@ export function CityInput(props: ICityInputProps) {
                         if (data.weather!.length > 0) {
                             setWeatherIcon(data.weather![0].icon!);
                             setDescription(data.weather![0].description!);
+                            setHumidity(data.main.humidity!);
+                            setTemperature(data.main.temp!);
+                            setWindSpeed(data.wind!.speed!);
                         }
                     })
                 }
@@ -35,14 +42,17 @@ export function CityInput(props: ICityInputProps) {
     };
 
     return(
-        <div>
-            <form method="post" onSubmit={onSelected}>
-                <p>Enter city:</p>
-                <input type="text" name="cityName"></input>
-                <button type="submit">Find Weather</button>
-            </form>
-
-            <WeatherPicture icon={weatherIcon} description={description}/>
-        </div>
+        <Container>
+            <Grid>
+                <Grid.Col>
+                    <form method="post" onSubmit={onSelected}>
+                        <p>Enter city:</p>
+                        <input type="text" name="cityName"></input>
+                        <button type="submit">Find Weather</button>
+                    </form>
+                </Grid.Col>
+            </Grid>            
+            <WeatherPicture icon={weatherIcon} description={description} temperatureInKelvin={temperature} humidityPercent={humidity} windSpeedMetersPerSec={windSpeed}/>
+        </Container>
     )
 }

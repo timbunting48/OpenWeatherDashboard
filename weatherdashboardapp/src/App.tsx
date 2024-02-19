@@ -5,7 +5,7 @@ import { WeatherApiService } from './services/WeatherApiService';
 function App() {
 
   const weatherApiService = new WeatherApiService();
-
+  
   return (
     <div className="App">
         <CityInput service={weatherApiService} />
