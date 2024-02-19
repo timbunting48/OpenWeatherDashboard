@@ -20,7 +20,7 @@ export function CityInput(props: ICityInputProps) {
        
     }, []); 
 
-    function onSelected(e: any)  {
+    const onSelected = (e: any) => {
         e.preventDefault();
         const city = e.target.cityName.value;
         if (city.length > 0) {
