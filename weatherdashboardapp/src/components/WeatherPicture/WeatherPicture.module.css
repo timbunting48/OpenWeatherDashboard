@@ -1,7 +1,22 @@
 .gridCol {
     background-color: lightblue;
+    min-height: 10em;
+    padding-top: 0.05em;
 }
 
-.margintop1em {
-    margin-top: 1em;
+.imagesize {
+    height: 5em;
+}
+
+.largeTextSize {
+    font-size: xxx-large;
+    
+}
+
+.nomargin {
+    margin: 0;
+}
+
+.nomarginbottom {
+    margin-bottom: 0;
 }

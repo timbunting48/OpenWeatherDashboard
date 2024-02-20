@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { WeatherApiService } from "../../services/WeatherApiService";
-import { CityLocation } from "../../models/CityLocation.class";
 import { CurrentWeather } from "../../models/CurrentWeather.class";
 import { WeatherPicture } from "../WeatherPicture/WeatherPicture";
 import { Container, Grid } from "@mantine/core";
@@ -10,49 +9,105 @@ export interface ICityInputProps{
 }
 
 export function CityInput(props: ICityInputProps) {
+    const [firstTime, setFirstTime] = useState(true);
+    const [cityName, setCityName] = useState('');
     const [weatherIcon, setWeatherIcon] = useState('');
+    const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [humidity, setHumidity] = useState(0);
     const [windSpeed, setWindSpeed] = useState(0);
     const [temperature, setTemperature] = useState(0);
+    const [weatherData, setWeatherData] = useState<CurrentWeather | undefined>(new CurrentWeather());
+    const [noResults, setNoResults] = useState(false);
+    const noResultsMessage: string = "City not found. Check spelling and try again."
+    const [checkboxChecked, setCheckboxChecked] = useState(true); 
+    const [checkboxHidden, setCheckBoxHidden] = useState(false);
+
+    const getWeatherData = useCallback((city: string | undefined) => {
+        if (city === undefined) {
+            props.service.getLocation().then((data: string) => {
+                city = data;
+                setCityName(city);
+                props.service.getWeather(city).then((data: CurrentWeather) => {
+                    setWeatherData(data);                
+                })
+            })
+        } else {
+            props.service.getWeather(city).then((data: CurrentWeather) => {
+                setWeatherData(data);                
+            })
+        }
+    }, [props.service] )
     
     useEffect(() => {
-       
-    }, []); 
+       if (firstTime) {
+        getWeatherData(undefined);
+        setFirstTime(false);
+       } 
+       if (weatherData && weatherData.weather && weatherData.weather.length > 0) {
+        setNoResults(false);
+        setCheckBoxHidden(false);
+        setTitle(weatherData.weather![0].main!);
+        setWeatherIcon(weatherData.weather![0].icon!);
+        setDescription(weatherData.weather![0].description!);
+        setHumidity(weatherData.main.humidity!);
+        setTemperature(weatherData.main.temp!);
+        setWindSpeed(weatherData.wind!.speed!);
+       } else {
+        setNoResults(true);
+       }
+    }, [weatherData, firstTime, getWeatherData]); 
 
     const onSelected = (e: any) => {
         e.preventDefault();
         const city = e.target.cityName.value;
         if (city.length > 0) {
-            props.service.getLocation(city).then((data: CityLocation[]) => {
-                let cities = data;
-                if (cities.length > 0) {
-                    props.service.getWeather(cities[0].lat!, cities[0].long!).then((data: CurrentWeather) => {
-                        if (data.weather!.length > 0) {
-                            setWeatherIcon(data.weather![0].icon!);
-                            setDescription(data.weather![0].description!);
-                            setHumidity(data.main.humidity!);
-                            setTemperature(data.main.temp!);
-                            setWindSpeed(data.wind!.speed!);
-                        }
-                    })
-                }
-            });
+            getWeatherData(city);   
+        } else {
+            setWeatherData(undefined);
         }
-    };
+    };    
+
+    const onCityChange = (e: any) => {
+        e.preventDefault();
+        var city = e.value;
+        if (!city) {
+            city = e.target.value;
+        }
+        setCityName(city);
+        setCheckBoxHidden(true);
+        setCheckboxChecked(false);
+    }
+
+
+    const setDefaultCity = () => {
+        props.service.setLocation(cityName).then(() =>{
+            setCheckboxChecked(true);
+        })
+    }
 
     return(
         <Container>
             <Grid>
                 <Grid.Col>
+                    <div>
                     <form method="post" onSubmit={onSelected}>
                         <p>Enter city:</p>
-                        <input type="text" name="cityName"></input>
-                        <button type="submit">Find Weather</button>
-                    </form>
+                        <input type="text" name="cityName" value={cityName} onChange={onCityChange}></input>
+                        <span>&nbsp;</span>
+                        <button type="submit">Find Weather</button> 
+                        <span>&nbsp;Set As Default?&nbsp;</span>   
+                        <input type="checkbox" checked={checkboxChecked} disabled={checkboxHidden} onChange={setDefaultCity}></input>
+                                            
+                    </form>                    
+                    </div>
                 </Grid.Col>
-            </Grid>            
-            <WeatherPicture icon={weatherIcon} description={description} temperatureInKelvin={temperature} humidityPercent={humidity} windSpeedMetersPerSec={windSpeed}/>
+            </Grid>
+            <br/>
+            <br/>
+            {noResults 
+            ? <div><p>{noResultsMessage}</p></div>     
+            : <WeatherPicture icon={weatherIcon} description={description} temperatureInKelvin={temperature} humidityPercent={humidity} windSpeedMetersPerSec={windSpeed} title={title}/>}
         </Container>
     )
 }

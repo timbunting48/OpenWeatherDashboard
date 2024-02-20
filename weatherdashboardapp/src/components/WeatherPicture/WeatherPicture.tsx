@@ -9,6 +9,7 @@ export interface IWeatherPicture{
     temperatureInKelvin: number;
     humidityPercent: number;
     windSpeedMetersPerSec: number;
+    title: string;
 }
 
 export function WeatherPicture(props: IWeatherPicture) {
@@ -18,26 +19,27 @@ export function WeatherPicture(props: IWeatherPicture) {
     return(
         <Grid>
             <Grid.Col span={{ base: 12, xs: 3}} >
-                <div className={styles.gridCol}>               
-                <img src={iconUrl} alt={props.description} className={styles.margintop1em}/>
+                <div className={styles.gridCol }>  
+                <h4 className={styles.nomarginbottom}>{props.title}</h4>             
+                <img src={iconUrl} alt={props.description} className={styles.imagesize}/>
                 </div>
             </Grid.Col>
             <Grid.Col span={{ base: 12, xs: 3 }} >
                 <div className={styles.gridCol}>
-                    <p>Temperature</p>
-                    <p>{temperatureCelsius}&deg;</p>
+                    <h4 className={styles.nomarginbottom}>Temperature</h4>
+                    <p className={styles.largeTextSize + ' ' + styles.nomargin}>{temperatureCelsius.toFixed(1)}&deg;</p>
                 </div>
             </Grid.Col>
             <Grid.Col span={{ base: 12, xs: 3 }} >
                 <div className={styles.gridCol}>
-                <p>Humidity</p>
-                <p>{props.humidityPercent}%</p>
+                <h4 className={styles.nomarginbottom}>Humidity</h4>
+                <p className={styles.largeTextSize + ' ' + styles.nomargin}>{props.humidityPercent}%</p>
                 </div>
             </Grid.Col>
             <Grid.Col span={{ base: 12, xs: 3 }} >
                 <div className={styles.gridCol}>
-                <p>Wind Speed</p>
-                <p>{props.windSpeedMetersPerSec} meters/sec</p>
+                <h4 className={styles.nomarginbottom}>Wind Speed</h4>
+                <p className={styles.nomargin}><span className={styles.largeTextSize}>{props.windSpeedMetersPerSec}</span><span> meters/sec</span></p>
                 </div>
             </Grid.Col>
         </Grid>

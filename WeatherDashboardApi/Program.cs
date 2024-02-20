@@ -15,6 +15,9 @@ builder.Services.AddSingleton(cfg => cfg.GetService<AppSettings>()!);
 
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IOpenWeatherApiHelper, OpenWeatherApiHelper>();
+builder.Services.AddSingleton<PersistedLocation>();
+builder.Services.AddSingleton<ICachingService, CachingService>();
+builder.Services.AddMemoryCache();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
