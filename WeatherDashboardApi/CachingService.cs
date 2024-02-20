@@ -2,16 +2,11 @@
 
 namespace WeatherDashboardApi
 {
-    public class CachingService : ICachingService
+    public class CachingService(IMemoryCache memoryCache) : ICachingService
     {
         private const int DEFAULTCACHEMINUTES = 30;
-        private readonly IMemoryCache _memoryCache;
+        private readonly IMemoryCache _memoryCache = memoryCache;
         private readonly MemoryCacheEntryOptions memoryCacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(DEFAULTCACHEMINUTES));
-
-        public CachingService(IMemoryCache memoryCache) 
-        {
-            _memoryCache = memoryCache;
-        }
 
         public void SetCache<T>(string key, T cacheValue)
         {

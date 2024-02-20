@@ -7,7 +7,7 @@ namespace WeatherDashboardApi
 {
     public class OpenWeatherApiHelper(IOptions<AppSettings> appSettings, ILogger<OpenWeatherApiHelper> logger) : IOpenWeatherApiHelper
     {
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly HttpClient _httpClient = new();
         private readonly ILogger<OpenWeatherApiHelper> _logger = logger;
         private readonly string _apiKey = appSettings.Value.ApiKey;
         private readonly int _limit = appSettings.Value.Limit;

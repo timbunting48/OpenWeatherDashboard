@@ -19,25 +19,32 @@ export function CityInput(props: ICityInputProps) {
     const [temperature, setTemperature] = useState(0);
     const [weatherData, setWeatherData] = useState<CurrentWeather | undefined>(new CurrentWeather());
     const [noResults, setNoResults] = useState(false);
-    const noResultsMessage: string = "City not found. Check spelling and try again."
+    const [errorInService, setErrorInService] = useState(false);    
     const [checkboxChecked, setCheckboxChecked] = useState(true); 
-    const [checkboxHidden, setCheckBoxHidden] = useState(false);
+    const [checkboxHidden, setCheckBoxHidden] = useState(true);
 
-    const getWeatherData = useCallback((city: string | undefined) => {
+    const noResultsMessage: string = "City not found. Check spelling and try again."
+    const errorResultsMessage: string = "Unable to get weather information at this time. Please try later."
+
+    const getWeatherFromCity = useCallback((city: string) => {
+        props.service.getWeather(city).then((data: CurrentWeather) => {
+            setWeatherData(data);  
+            setErrorInService(false);   
+            setCheckBoxHidden(false);          
+        }).catch(() => setErrorInService(true))
+    }, [props.service]);
+
+    const getWeatherData = useCallback((city: string | undefined) => {        
         if (city === undefined) {
             props.service.getLocation().then((data: string) => {
                 city = data;
                 setCityName(city);
-                props.service.getWeather(city).then((data: CurrentWeather) => {
-                    setWeatherData(data);                
-                })
-            })
+                getWeatherFromCity(city);
+            }).catch(() => setErrorInService(true))
         } else {
-            props.service.getWeather(city).then((data: CurrentWeather) => {
-                setWeatherData(data);                
-            })
-        }
-    }, [props.service] )
+            getWeatherFromCity(city);
+        }        
+    }, [props.service, getWeatherFromCity] )    
     
     useEffect(() => {
        if (firstTime) {
@@ -105,8 +112,8 @@ export function CityInput(props: ICityInputProps) {
             </Grid>
             <br/>
             <br/>
-            {noResults 
-            ? <div><p>{noResultsMessage}</p></div>     
+            {noResults || errorInService
+            ? <div><p>{errorInService ? errorResultsMessage : noResultsMessage}</p></div>     
             : <WeatherPicture icon={weatherIcon} description={description} temperatureInKelvin={temperature} humidityPercent={humidity} windSpeedMetersPerSec={windSpeed} title={title}/>}
         </Container>
     )
