@@ -1,5 +1,6 @@
 ﻿namespace WeatherDashboardApi.Models
 {
+    // generated from output of OpenWeather API
     public class CityLocation
     {
         public string name { get; set; }

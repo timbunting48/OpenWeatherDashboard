@@ -2,6 +2,7 @@
 
 namespace WeatherDashboardApi
 {
+    // This could be extended to be a distributed cache if used in a Web farm
     public class CachingService(IMemoryCache memoryCache) : ICachingService
     {
         private const int DEFAULTCACHEMINUTES = 30;

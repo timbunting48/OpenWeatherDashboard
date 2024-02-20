@@ -1,5 +1,6 @@
 ﻿namespace WeatherDashboardApi
 {
+    // This would be extended in time to be a default specific to a logged in user
     public class PersistedLocation
     {
         // Set Default

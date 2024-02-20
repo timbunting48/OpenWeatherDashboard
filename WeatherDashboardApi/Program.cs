@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Options;
-
 using WeatherDashboardApi;
 
 
@@ -22,6 +20,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// This would be locked down more in production environment instead of allow any origin
 builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
 {
     builder.AllowAnyOrigin()

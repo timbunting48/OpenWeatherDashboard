@@ -1,6 +1,6 @@
 ﻿namespace WeatherDashboardApi.Models
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+    // generated from output of OpenWeather API
     public class Clouds
     {
         public int all { get; set; }

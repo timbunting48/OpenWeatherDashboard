@@ -99,7 +99,7 @@ export function CityInput(props: ICityInputProps) {
                 <Grid.Col>
                     <div>
                     <form method="post" onSubmit={onSelected}>
-                        <p>Enter city:</p>
+                        <p>Enter city (Great Britain only):</p>
                         <input type="text" name="cityName" value={cityName} onChange={onCityChange}></input>
                         <span>&nbsp;</span>
                         <button type="submit">Find Weather</button> 

@@ -12,12 +12,13 @@ namespace WeatherDashboardApi
         private readonly string _apiKey = appSettings.Value.ApiKey;
         private readonly int _limit = appSettings.Value.Limit;
         private const string OpenWeatherApi = "http://api.openweathermap.org";
+        private const string CountryCode = "GB";
 
         public async Task<IEnumerable<CityLocation>?> GetCityLocation(string city)
         {
             try
             {
-                var response = await _httpClient.GetStringAsync($"{OpenWeatherApi}/geo/1.0/direct?q={city},GB&limit={_limit}&appid={_apiKey}");
+                var response = await _httpClient.GetStringAsync($"{OpenWeatherApi}/geo/1.0/direct?q={city},{CountryCode}&limit={_limit}&appid={_apiKey}");
                 var cityLocations = JsonConvert.DeserializeObject<IEnumerable<CityLocation>>(response);
                 return cityLocations;
             }

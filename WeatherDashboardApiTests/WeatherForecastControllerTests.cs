@@ -10,6 +10,8 @@ namespace WeatherDashboardApiTests
 {
     public class WeatherForecastControllerTests
     {
+        // Would be extended to cover tests for Caching and error situations
+
         [Fact]
         public async Task Controller_Returns_CityLocationArray()
         {
